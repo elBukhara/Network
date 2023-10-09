@@ -1,0 +1,31 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <link href="{% static 'network/landingPage.css' %}" rel="stylesheet">
+    <div class="jumbotron">
+        <h1 class="display-3 text-dark">Welcome to LinkUp</h1>
+        <p class="lead text-dark">The social network that connects you with people from all around the world.</p>
+        {% if user.is_authenticated %}
+            <a href="{% url 'allposts' %}" class="btn btn-primary btn-lg" id="landingPageButton">View Posts</a>
+        {% else %}
+            <a href="{% url 'login' %}" class="btn btn-primary btn-lg" id="landingPageButton">Sign In</a>
+        {% endif %}
+    </div>
+    <div class="container mb-4">
+        <div class="row">
+            <div class="col-md-4">
+            <h2>Discover New Friends</h2>
+            <p>Connect with like-minded individuals who share your interests and passions.</p>
+            </div>
+            <div class="col-md-4">
+            <h2>Share Your Thoughts and Ideas</h2>
+            <p>Express yourself and engage in meaningful conversations with others.</p>
+            </div>
+            <div class="col-md-4">
+            <h2>Stay Up-to-date</h2>
+            <p>Get the latest news and trends from around the world.</p>
+            </div>
+        </div>
+    </div> 
+{% endblock %}

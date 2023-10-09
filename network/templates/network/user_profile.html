@@ -1,0 +1,111 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+<div class="container mt-3">
+    <div class="body">  
+        <h3 class="heading">Profile name: {{ user }}</h3><p style="display: none;" data-id="{{ user.id }}" id="user_id">ID: {{ user.id }}</p>
+        <p>Followers: {{ followers.count }}</p>
+        <p>Following: {{ following.count }}</p>
+        
+        {% if request.user.is_authenticated %}
+            {% if IsFollowing %}
+                <a href="{% url 'unfollow' user.id %}" class="btn btn-primary" id="unfollow-btn">Unfollow</a>
+            {% else %}
+                <a href="{% url 'follow' user.id %}" class="btn btn-primary" id="follow-btn">Follow</a>
+            {% endif %}
+        {% else %}
+            <a href="#" class="btn btn-primary" id="follow-btn">Follow</a>
+        {% endif %}
+        <hr>
+        <div class="container w-75">
+            <div class="row g-3">
+                {% for post in posts %}
+                    <div class="col-12 col-md-12 col-lg-12" style="margin-top: 20px;">
+                        <div class="card">
+                            <div class="space-for-buttons card-header">
+                                <h5><a href="{% url 'user' post.user.id %}">@{{ post.user }}</a></h5>
+                                <p> {{ post.timestamp }}</p> 
+                            </div>
+                            <div class="card-body">
+                            <p class="card-text">{{ post.body }}</p>
+                            {% if request.user.is_authenticated %}
+                                    <button type="button" class="btn btn-outline-danger" value="{{ post.id }}">
+                                        <!-- IF USER HAS ALREADY LIKED-->
+                                        {% if post.id in liked_posts %}
+                                            <i class="fa-solid fa-heart" id="{{ post.id }}"></i>
+                                        <!-- IF USER HASN'T LIKED YET-->
+                                        {% else %}
+                                            <i class="fa-regular fa-heart" id="{{ post.id }}"></i>
+                                        {% endif %}
+
+                                        <span id="like-count-{{ post.id }}">{{ post.likes.count }}</span>
+                                    </button>
+                            <!-- FOR THOSE WHO ARE NOT AUTHENTICATED-->
+                            {% else %}
+                                <button type="button" class="btn btn-outline-danger">
+                                    <i class="fa-regular fa-heart"></i> 
+                                    {{ post.likes.count }} 
+                                </button>
+                            {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <li>You do not have any active listings yet.</li>
+                {% endfor %}
+            </div>    
+        </div>
+
+        {% if posts.paginator.num_pages > 0 %}
+            <hr>
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    <!--<a href="?page=1">&laquo; First</a>-->
+                    {% if posts.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ posts.previous_page_number }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% for i in posts.paginator.page_range %}
+                        {% if i == posts.number %}
+                            <li class="page-item active" aria-current="page">
+                                <span class="page-link">{{ i }}</span>
+                            </li>
+                        {% elif i > posts.number|add:'-2' and i < posts.number|add:'2' %}
+                            <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if posts.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ posts.next_page_number }}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                    <!--<a href="?page={{ posts.paginator.num_pages }}">&raquo; Last</a>-->
+                </ul>
+                {% if posts.paginator.num_pages > 2 %}
+                    <p class="blockquote-footer justify-content-center text-center">{{ posts.number}} of {{ posts.paginator.num_pages }} pages</p>
+                {% endif %}
+            </nav>       
+        {% endif %}
+        <script src="{% static 'network/network.js' %}"></script>
+    </div>
+</div>
+
+{% endblock %}
