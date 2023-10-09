@@ -26,7 +26,7 @@
         
                 <div class="collapse navbar-collapse" id="navbarsExample07">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        {% if user.is_authenticated %}
+                        {% if request.user.is_authenticated %}
                             <li class="nav-item">
                                 <a class="nav-link active" aria-current="page" href="{% url 'profile' %}">@{{ request.user.username }}</a>
                             </li>
@@ -40,14 +40,14 @@
                               {% endif %}
                             </ul>
                         </li>
-                        {% if user.is_authenticated %}
+                        {% if request.user.is_authenticated %}
                             <li class="nav-item">   
                                 <a class="nav-link" data-bs-toggle="modal" data-bs-target="#createPost" href="#">Create</a>
                             </li>
                         {% endif %}
                     </ul>
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0 ml-auto">
-                        {% if user.is_authenticated %}
+                        {% if request.user.is_authenticated %}
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'logout' %}" tabindex="-1">Log Out</a>
                             </li>
