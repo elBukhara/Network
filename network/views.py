@@ -45,7 +45,7 @@ def followingPosts(request):
         "PostsFromFollowing": PostsFromFollowing
     })
 
-# For rendering the user's own profile 
+# For rendering user's own profile 
 def profile(request):
     current_user = request.user
 
